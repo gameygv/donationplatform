@@ -59,11 +59,11 @@ export default function FilesPage() {
   };
 
   if (!user) {
-    return <div>Please login to access files</div>;
+    return <div>{t('files.pleaseLogin')}</div>;
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{t('files.loading')}</div>;
   }
 
   return (
@@ -72,7 +72,7 @@ export default function FilesPage() {
         <h1 className="text-3xl font-bold">{t('files.title')}</h1>
         {selectedFolder && (
           <Button variant="outline" onClick={() => setSelectedFolder(null)}>
-            ← Back to Folders
+            {t('files.backToFolders')}
           </Button>
         )}
       </div>
@@ -117,7 +117,7 @@ export default function FilesPage() {
       ) : (
         <div>
           <h2 className="text-xl font-semibold mb-4">
-            Files in {filesData?.folders.find(f => f.id === selectedFolder)?.name}
+            {t('files.filesIn')} {filesData?.folders.find(f => f.id === selectedFolder)?.name}
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filesData?.files.map((file) => (
@@ -130,10 +130,10 @@ export default function FilesPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-2">
-                    Type: {file.fileType}
+                    {t('files.type')} {file.fileType}
                   </p>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Size: {(file.fileSize / 1024 / 1024).toFixed(2)} MB
+                    {t('files.size')} {(file.fileSize / 1024 / 1024).toFixed(2)} MB
                   </p>
                   <Button 
                     onClick={() => handleDownload(file.id, file.originalName)}
@@ -148,7 +148,7 @@ export default function FilesPage() {
           </div>
           {filesData?.files.length === 0 && (
             <p className="text-center text-muted-foreground py-8">
-              No files in this folder yet.
+              {t('files.noFilesYet')}
             </p>
           )}
         </div>

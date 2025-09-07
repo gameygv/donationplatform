@@ -117,7 +117,7 @@ export default function DashboardPage() {
                         </Select>
                       </div>
                       <div>
-                        <Label htmlFor="currentPassword">Current Password (leave empty to keep)</Label>
+                        <Label htmlFor="currentPassword">Contraseña Actual (deja vacío para mantener)</Label>
                         <Input
                           id="currentPassword"
                           type="password"
@@ -126,7 +126,7 @@ export default function DashboardPage() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="newPassword">New Password (leave empty to keep)</Label>
+                        <Label htmlFor="newPassword">Nueva Contraseña (deja vacío para mantener)</Label>
                         <Input
                           id="newPassword"
                           type="password"
@@ -135,7 +135,7 @@ export default function DashboardPage() {
                         />
                       </div>
                       <Button type="submit" className="w-full">
-                        Update Profile
+                        Actualizar Perfil
                       </Button>
                     </form>
                   </DialogContent>
@@ -143,9 +143,9 @@ export default function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Name:</strong> {user.firstName} {user.lastName}</p>
-              <p><strong>Language:</strong> {user.language}</p>
+              <p><strong>{t('common.email')}</strong> {user.email}</p>
+              <p><strong>{t('common.name')}</strong> {user.firstName} {user.lastName}</p>
+              <p><strong>{t('common.language')}</strong> {user.language}</p>
             </CardContent>
           </Card>
 

@@ -82,11 +82,11 @@ export default function AdminPage() {
   };
 
   if (!user?.isAdmin) {
-    return <div>Access denied. Admin privileges required.</div>;
+    return <div>{t('admin.accessDenied')}</div>;
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{t('common.loading')}</div>;
   }
 
   return (
@@ -96,7 +96,7 @@ export default function AdminPage() {
       <div className="grid lg:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('admin.totalUsers')}</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -106,7 +106,7 @@ export default function AdminPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Donations</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('admin.totalDonations')}</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -120,25 +120,25 @@ export default function AdminPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Upload className="h-5 w-5 mr-2" />
-              Upload File
+              {t('admin.uploadFile')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleUpload} className="space-y-4">
               <div>
-                <Label htmlFor="folderId">Folder</Label>
+                <Label htmlFor="folderId">{t('admin.folder')}</Label>
                 <select
                   id="folderId"
                   value={uploadForm.folderId}
                   onChange={(e) => setUploadForm(prev => ({ ...prev, folderId: parseInt(e.target.value) }))}
                   className="w-full p-2 border rounded"
                 >
-                  <option value={1}>General</option>
-                  <option value={2}>Premium</option>
+                  <option value={1}>{t('admin.general')}</option>
+                  <option value={2}>{t('admin.premium')}</option>
                 </select>
               </div>
               <div>
-                <Label htmlFor="file">File</Label>
+                <Label htmlFor="file">{t('admin.file')}</Label>
                 <Input
                   id="file"
                   type="file"
@@ -147,7 +147,7 @@ export default function AdminPage() {
                 />
               </div>
               <Button type="submit" disabled={!uploadForm.file}>
-                Upload
+                {t('admin.upload')}
               </Button>
             </form>
           </CardContent>
@@ -167,13 +167,13 @@ export default function AdminPage() {
                   <p className="text-sm text-muted-foreground">{userData.email}</p>
                   <div className="flex items-center space-x-2 mt-1">
                     <Badge variant="secondary">
-                      ${userData.totalDonated.toFixed(2)} donated
+                      ${userData.totalDonated.toFixed(2)} {t('admin.donated')}
                     </Badge>
                     <Badge variant="outline">
-                      {userData.donationCount} donations
+                      {userData.donationCount} {t('admin.donations')}
                     </Badge>
                     {userData.isAdmin && (
-                      <Badge variant="destructive">Admin</Badge>
+                      <Badge variant="destructive">{t('admin.admin')}</Badge>
                     )}
                   </div>
                 </div>
@@ -190,20 +190,20 @@ export default function AdminPage() {
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl">
                     <DialogHeader>
-                      <DialogTitle>User Details</DialogTitle>
+                      <DialogTitle>{t('admin.userDetails')}</DialogTitle>
                     </DialogHeader>
                     {userDetails && (
                       <div className="space-y-6">
                         <div>
-                          <h3 className="font-semibold mb-2">Profile</h3>
-                          <p><strong>Name:</strong> {userDetails.user.firstName} {userDetails.user.lastName}</p>
-                          <p><strong>Email:</strong> {userDetails.user.email}</p>
-                          <p><strong>Language:</strong> {userDetails.user.language}</p>
-                          <p><strong>Total Donated:</strong> ${userDetails.user.totalDonated.toFixed(2)}</p>
+                          <h3 className="font-semibold mb-2">{t('admin.profile')}</h3>
+                          <p><strong>{t('admin.name')}</strong> {userDetails.user.firstName} {userDetails.user.lastName}</p>
+                          <p><strong>{t('admin.email')}</strong> {userDetails.user.email}</p>
+                          <p><strong>{t('admin.language')}</strong> {userDetails.user.language}</p>
+                          <p><strong>{t('admin.totalDonated')}</strong> ${userDetails.user.totalDonated.toFixed(2)}</p>
                         </div>
 
                         <div>
-                          <h3 className="font-semibold mb-2">Recent Donations</h3>
+                          <h3 className="font-semibold mb-2">{t('admin.recentDonations')}</h3>
                           <div className="space-y-2 max-h-40 overflow-y-auto">
                             {userDetails.donations.map((donation) => (
                               <div key={donation.id} className="flex justify-between items-center p-2 bg-muted rounded">
@@ -217,7 +217,7 @@ export default function AdminPage() {
                         </div>
 
                         <div>
-                          <h3 className="font-semibold mb-2">Folder Access</h3>
+                          <h3 className="font-semibold mb-2">{t('admin.folderAccess')}</h3>
                           <div className="space-y-1">
                             {userDetails.folderAccess.map((access) => (
                               <Badge key={access.id} variant="secondary">
