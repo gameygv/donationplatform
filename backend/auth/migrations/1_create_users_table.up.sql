@@ -4,7 +4,7 @@ CREATE TABLE users (
   password_hash VARCHAR(255) NOT NULL,
   first_name VARCHAR(100),
   last_name VARCHAR(100),
-  language VARCHAR(2) DEFAULT 'en',
+  language VARCHAR(2) DEFAULT 'es',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   is_admin BOOLEAN DEFAULT FALSE

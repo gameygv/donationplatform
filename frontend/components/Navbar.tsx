@@ -34,8 +34,8 @@ export default function Navbar() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="en">{t('language.english')}</SelectItem>
                   <SelectItem value="es">{t('language.spanish')}</SelectItem>
+                  <SelectItem value="en">{t('language.english')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

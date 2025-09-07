@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string, 
     firstName?: string, 
     lastName?: string, 
-    language: string = 'en'
+    language: string = 'es'
   ) => {
     const response = await backend.auth.register({
       email,

@@ -112,7 +112,7 @@ export const updateProfile = api<UpdateProfileRequest, UserProfile>(
       SET 
         first_name = ${req.firstName || null},
         last_name = ${req.lastName || null},
-        language = ${req.language || 'en'},
+        language = ${req.language || 'es'},
         updated_at = CURRENT_TIMESTAMP
       WHERE id = ${decoded.userId}
     `;

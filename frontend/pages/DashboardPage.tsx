@@ -19,7 +19,7 @@ export default function DashboardPage() {
   const [formData, setFormData] = useState({
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
-    language: user?.language || 'en',
+    language: user?.language || 'es',
     currentPassword: '',
     newPassword: '',
   });
@@ -111,8 +111,8 @@ export default function DashboardPage() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="en">{t('language.english')}</SelectItem>
                             <SelectItem value="es">{t('language.spanish')}</SelectItem>
+                            <SelectItem value="en">{t('language.english')}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

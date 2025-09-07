@@ -15,7 +15,7 @@ export default function RegisterPage() {
     lastName: '',
     email: '',
     password: '',
-    language: 'en',
+    language: 'es',
   });
   const [isLoading, setIsLoading] = useState(false);
   const { register } = useAuth();
@@ -114,8 +114,8 @@ export default function RegisterPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="en">{t('language.english')}</SelectItem>
                   <SelectItem value="es">{t('language.spanish')}</SelectItem>
+                  <SelectItem value="en">{t('language.english')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
