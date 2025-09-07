@@ -29,16 +29,7 @@ export interface AdminDeleteFileRequest {
 export const uploadFile = api<AdminUploadFileRequest, AdminUploadFileResponse>(
   { expose: true, method: "POST", path: "/admin/upload" },
   async (req) => {
-    const decoded = verifyAdminToken(req.token);
-    
-    // Check if user is admin
-    const user = await authDB.queryRow<{ is_admin: boolean }>`
-      SELECT is_admin FROM users WHERE id = ${decoded.userId}
-    `;
-    
-    if (!user?.is_admin) {
-      throw APIError.permissionDenied("Admin access required");
-    }
+    await verifyAdminToken(req.token);
 
     // Generate unique file name
     const timestamp = Date.now();
@@ -75,16 +66,7 @@ export const uploadFile = api<AdminUploadFileRequest, AdminUploadFileResponse>(
 export const deleteFile = api<AdminDeleteFileRequest, { success: boolean }>(
   { expose: true, method: "DELETE", path: "/admin/files/:fileId" },
   async (req) => {
-    const decoded = verifyAdminToken(req.token);
-    
-    // Check if user is admin
-    const user = await authDB.queryRow<{ is_admin: boolean }>`
-      SELECT is_admin FROM users WHERE id = ${decoded.userId}
-    `;
-    
-    if (!user?.is_admin) {
-      throw APIError.permissionDenied("Admin access required");
-    }
+    await verifyAdminToken(req.token);
 
     // Get file info
     const file = await filesDB.queryRow<{ storage_path: string }>`
@@ -111,9 +93,19 @@ export const deleteFile = api<AdminDeleteFileRequest, { success: boolean }>(
   }
 );
 
-function verifyAdminToken(token: string): { userId: number; email: string } {
+async function verifyAdminToken(token: string): Promise<{ userId: number; email: string }> {
   try {
     const decoded = jwt.verify(token, jwtSecret()) as any;
+    
+    // Check if user is admin
+    const user = await authDB.queryRow<{ is_admin: boolean }>`
+      SELECT is_admin FROM users WHERE id = ${decoded.userId}
+    `;
+    
+    if (!user?.is_admin) {
+      throw APIError.permissionDenied("Admin access required");
+    }
+    
     return { userId: decoded.userId, email: decoded.email };
   } catch (error) {
     throw APIError.unauthenticated("Invalid admin token");
