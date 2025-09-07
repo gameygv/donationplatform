@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { secret } from "encore.dev/config";
 import { authDB } from "./db";
+import log from "encore.dev/log";
 
 const jwtSecret = secret("JWTSecret");
 
@@ -29,6 +30,19 @@ export const login = api<LoginRequest, LoginResponse>(
   async (req) => {
     if (!req.email || !req.password) {
       throw APIError.invalidArgument("Email and password are required");
+    }
+
+    // On first run, if no users exist, create a default admin user
+    // with the credentials provided in this first login attempt.
+    const userCountRes = await authDB.queryRow<{ count: string }>`SELECT count(*) FROM users`;
+    const userCount = parseInt(userCountRes?.count ?? "0", 10);
+    if (userCount === 0 && req.email === "admin@example.com") {
+      log.info("no users found, creating default admin user");
+      const passwordHash = await bcrypt.hash(req.password, 10);
+      await authDB.exec`
+        INSERT INTO users (email, password_hash, is_admin, first_name, language)
+        VALUES ('admin@example.com', ${passwordHash}, TRUE, 'Admin', 'es')
+      `;
     }
 
     // Find user
