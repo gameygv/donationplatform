@@ -201,6 +201,20 @@ export default function AdminPage() {
     },
   });
 
+  const deleteFileMutation = useMutation({
+    mutationFn: async (fileId: number) => {
+      if (!token) throw new Error('No token');
+      return backend.admin.deleteFile({ token, fileId });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-files'] });
+      toast({ title: "Archivo eliminado exitosamente" });
+    },
+    onError: (error) => {
+      toast({ title: "Error al eliminar archivo", description: error.message, variant: "destructive" });
+    },
+  });
+
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!token || !uploadForm.file) return;
@@ -735,7 +749,7 @@ export default function AdminPage() {
                       size="sm"
                       onClick={() => {
                         if (confirm('¿Estás seguro de que quieres eliminar este archivo?')) {
-                          // TODO: Implement file deletion
+                          deleteFileMutation.mutate(file.id);
                         }
                       }}
                     >
