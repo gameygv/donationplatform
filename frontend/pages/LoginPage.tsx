@@ -31,8 +31,8 @@ export default function LoginPage() {
     } catch (error) {
       console.error('Login error:', error);
       toast({
-        title: "Login failed",
-        description: "Invalid email or password",
+        title: t('login.failed'),
+        description: t('login.failedDesc'),
         variant: "destructive",
       });
     } finally {
