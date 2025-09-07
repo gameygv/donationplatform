@@ -1,0 +1,1 @@
+{"id": "donation-platform-wdt2", "lang": "typescript"}

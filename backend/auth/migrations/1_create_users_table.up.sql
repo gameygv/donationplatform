@@ -1,0 +1,13 @@
+CREATE TABLE users (
+  id BIGSERIAL PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  first_name VARCHAR(100),
+  last_name VARCHAR(100),
+  language VARCHAR(2) DEFAULT 'en',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  is_admin BOOLEAN DEFAULT FALSE
+);
+
+CREATE INDEX idx_users_email ON users(email);
