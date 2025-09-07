@@ -1,8 +1,11 @@
 import { api, APIError } from "encore.dev/api";
 import jwt from "jsonwebtoken";
+import { secret } from "encore.dev/config";
 import { filesDB } from "../files/db";
 import { filesBucket } from "../files/storage";
 import { authDB } from "../auth/db";
+
+const jwtSecret = secret("JWTSecret");
 
 export interface AdminUploadFileRequest {
   token: string;
@@ -26,7 +29,16 @@ export interface AdminDeleteFileRequest {
 export const uploadFile = api<AdminUploadFileRequest, AdminUploadFileResponse>(
   { expose: true, method: "POST", path: "/admin/upload" },
   async (req) => {
-    verifyAdminToken(req.token);
+    const decoded = verifyAdminToken(req.token);
+    
+    // Check if user is admin
+    const user = await authDB.queryRow<{ is_admin: boolean }>`
+      SELECT is_admin FROM users WHERE id = ${decoded.userId}
+    `;
+    
+    if (!user?.is_admin) {
+      throw APIError.permissionDenied("Admin access required");
+    }
 
     // Generate unique file name
     const timestamp = Date.now();
@@ -63,7 +75,16 @@ export const uploadFile = api<AdminUploadFileRequest, AdminUploadFileResponse>(
 export const deleteFile = api<AdminDeleteFileRequest, { success: boolean }>(
   { expose: true, method: "DELETE", path: "/admin/files/:fileId" },
   async (req) => {
-    verifyAdminToken(req.token);
+    const decoded = verifyAdminToken(req.token);
+    
+    // Check if user is admin
+    const user = await authDB.queryRow<{ is_admin: boolean }>`
+      SELECT is_admin FROM users WHERE id = ${decoded.userId}
+    `;
+    
+    if (!user?.is_admin) {
+      throw APIError.permissionDenied("Admin access required");
+    }
 
     // Get file info
     const file = await filesDB.queryRow<{ storage_path: string }>`
@@ -92,21 +113,7 @@ export const deleteFile = api<AdminDeleteFileRequest, { success: boolean }>(
 
 function verifyAdminToken(token: string): { userId: number; email: string } {
   try {
-    const decoded = jwt.verify(token, "your-secret-key") as any;
-    
-    // Check if user is admin
-    const checkAdmin = async () => {
-      const user = await authDB.queryRow<{ is_admin: boolean }>`
-        SELECT is_admin FROM users WHERE id = ${decoded.userId}
-      `;
-      
-      if (!user?.is_admin) {
-        throw APIError.permissionDenied("Admin access required");
-      }
-    };
-    
-    checkAdmin();
-    
+    const decoded = jwt.verify(token, jwtSecret()) as any;
     return { userId: decoded.userId, email: decoded.email };
   } catch (error) {
     throw APIError.unauthenticated("Invalid admin token");

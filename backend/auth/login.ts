@@ -1,7 +1,10 @@
 import { api, APIError } from "encore.dev/api";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { secret } from "encore.dev/config";
 import { authDB } from "./db";
+
+const jwtSecret = secret("JWTSecret");
 
 export interface LoginRequest {
   email: string;
@@ -56,7 +59,7 @@ export const login = api<LoginRequest, LoginResponse>(
     // Generate JWT token
     const token = jwt.sign(
       { userId: user.id, email: user.email },
-      "your-secret-key", // TODO: Move to secret
+      jwtSecret(),
       { expiresIn: "7d" }
     );
 

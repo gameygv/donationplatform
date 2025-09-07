@@ -1,7 +1,9 @@
 import { api, APIError } from "encore.dev/api";
 import jwt from "jsonwebtoken";
+import { secret } from "encore.dev/config";
 import { filesDB } from "./db";
-import { authDB } from "../auth/db";
+
+const jwtSecret = secret("JWTSecret");
 
 export interface ListFilesRequest {
   token: string;
@@ -104,7 +106,7 @@ export const listFiles = api<ListFilesRequest, ListFilesResponse>(
 
 function verifyToken(token: string): { userId: number; email: string } {
   try {
-    const decoded = jwt.verify(token, "your-secret-key") as any;
+    const decoded = jwt.verify(token, jwtSecret()) as any;
     return { userId: decoded.userId, email: decoded.email };
   } catch (error) {
     throw APIError.unauthenticated("Invalid token");

@@ -1,7 +1,10 @@
 import { api, APIError } from "encore.dev/api";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { secret } from "encore.dev/config";
 import { authDB } from "./db";
+
+const jwtSecret = secret("JWTSecret");
 
 export interface GetProfileRequest {
   token: string;
@@ -124,7 +127,7 @@ export const updateProfile = api<UpdateProfileRequest, UserProfile>(
 
 function verifyToken(token: string): { userId: number; email: string } {
   try {
-    const decoded = jwt.verify(token, "your-secret-key") as any;
+    const decoded = jwt.verify(token, jwtSecret()) as any;
     return { userId: decoded.userId, email: decoded.email };
   } catch (error) {
     throw APIError.unauthenticated("Invalid token");

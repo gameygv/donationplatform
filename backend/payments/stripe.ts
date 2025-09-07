@@ -5,6 +5,7 @@ import { authDB } from "../auth/db";
 import jwt from "jsonwebtoken";
 
 const stripeSecretKey = secret("StripeSecretKey");
+const jwtSecret = secret("JWTSecret");
 const stripe = new Stripe(stripeSecretKey(), { apiVersion: "2024-06-20" });
 
 export interface CreatePaymentIntentRequest {
@@ -122,7 +123,7 @@ export const confirmDonation = api<ConfirmDonationRequest, ConfirmDonationRespon
 
 function verifyToken(token: string): { userId: number; email: string } {
   try {
-    const decoded = jwt.verify(token, "your-secret-key") as any;
+    const decoded = jwt.verify(token, jwtSecret()) as any;
     return { userId: decoded.userId, email: decoded.email };
   } catch (error) {
     throw APIError.unauthenticated("Invalid token");
